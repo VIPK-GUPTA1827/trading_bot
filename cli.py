@@ -1,5 +1,14 @@
 import os
 import sys
+
+# Reconfigure stdout/stderr to utf-8 to avoid console encoding crashes with emojis on Windows
+if sys.version_info >= (3, 7):
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+        sys.stderr.reconfigure(encoding='utf-8')
+    except Exception:
+        pass
+
 import argparse
 from dotenv import load_dotenv, set_key
 import questionary
@@ -37,27 +46,40 @@ def run_interactive_menu():
 
     api_key, api_secret = load_credentials()
 
-    # If credentials are missing, guide the user to enter them
+    # If credentials are missing, guide the user to enter them or run in simulation mode
     if not api_key or not api_secret:
         print(Fore.YELLOW + "API credentials not found in environment or .env file.")
-        setup_now = questionary.confirm("Would you like to configure your API credentials now?").ask()
+        action_choice = questionary.select(
+            "What would you like to do?",
+            choices=[
+                "Run in Simulation Mode (No API keys required, simulated execution)",
+                "Configure API credentials now (Enter API Key and Secret)",
+                "Exit"
+            ]
+        ).ask()
         
-        if not setup_now:
-            print(Fore.RED + "Cannot proceed without Binance Testnet API credentials.")
-            sys.exit(1)
+        if action_choice == "Exit" or action_choice is None:
+            print(Fore.RED + "Exiting...")
+            sys.exit(0)
             
-        api_key = questionary.text("Enter your Binance Futures Testnet API Key:").ask()
-        api_secret = questionary.password("Enter your Binance Futures Testnet Secret Key:").ask()
-        
-        if not api_key or not api_secret:
-            print(Fore.RED + "API Key and Secret cannot be empty.")
-            sys.exit(1)
+        elif action_choice == "Run in Simulation Mode (No API keys required, simulated execution)":
+            api_key = "MOCK_KEY"
+            api_secret = "MOCK_SECRET"
+            print(Fore.GREEN + "Starting in SIMULATION MODE. Orders will be simulated locally.")
             
-        save_env = questionary.confirm("Save these credentials to .env file?").ask()
-        if save_env:
-            setup_env_credentials(api_key, api_secret)
-            # Reload dotenv to set environment variables
-            load_dotenv(ENV_FILE)
+        else:
+            api_key = questionary.text("Enter your Binance Futures Testnet API Key:").ask()
+            api_secret = questionary.password("Enter your Binance Futures Testnet Secret Key:").ask()
+            
+            if not api_key or not api_secret:
+                print(Fore.RED + "API Key and Secret cannot be empty.")
+                sys.exit(1)
+                
+            save_env = questionary.confirm("Save these credentials to .env file?").ask()
+            if save_env:
+                setup_env_credentials(api_key, api_secret)
+                # Reload dotenv to set environment variables
+                load_dotenv(ENV_FILE)
 
     # Initialize client and manager
     try:
@@ -159,9 +181,9 @@ def run_args_mode(args):
     api_key, api_secret = load_credentials()
     
     if not api_key or not api_secret:
-        print(Fore.RED + "Error: Binance Testnet API Key or Secret not found in .env or system environment.")
-        print(Fore.YELLOW + "Please run in interactive mode once to configure it: python cli.py")
-        sys.exit(1)
+        print(Fore.YELLOW + "API credentials not found. Falling back to Simulation Mode (MOCK).")
+        api_key = "MOCK_KEY"
+        api_secret = "MOCK_SECRET"
 
     try:
         client = BinanceTestnetClient(api_key=api_key, api_secret=api_secret)
