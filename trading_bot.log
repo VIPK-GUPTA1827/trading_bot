@@ -1,0 +1,8 @@
+[2026-06-09 15:55:09] Testing connection to Binance Futures Testnet...
+[2026-06-09 15:55:14] Connection Successful! Server Time: 1781000607529
+[2026-06-09 15:55:26] Initiating MARKET BUY order for 0.002 BTCUSDT (MockMode=True)
+[2026-06-09 15:55:26] MOCK REQUEST: Symbol=BTCUSDT, Side=BUY, Type=MARKET, Qty=0.002, Price=None
+[2026-06-09 15:55:26] MOCK RESPONSE: {'orderId': 1781000726228, 'symbol': 'BTCUSDT', 'status': 'FILLED', 'clientOrderId': 'mock_1781000726228', 'price': '95000.0', 'origQty': '0.002', 'executedQty': '0.002', 'side': 'BUY', 'type': 'MARKET', 'timeInForce': 'GTC', 'updateTime': 1781000726228}
+[2026-06-09 15:55:38] Initiating LIMIT SELL order for 0.005 BTCUSDT (MockMode=True)
+[2026-06-09 15:55:38] MOCK REQUEST: Symbol=BTCUSDT, Side=SELL, Type=LIMIT, Qty=0.005, Price=98000.0
+[2026-06-09 15:55:38] MOCK RESPONSE: {'orderId': 1781000738595, 'symbol': 'BTCUSDT', 'status': 'NEW', 'clientOrderId': 'mock_1781000738595', 'price': '98000.0', 'origQty': '0.005', 'executedQty': '0.0', 'side': 'SELL', 'type': 'LIMIT', 'timeInForce': 'GTC', 'updateTime': 1781000738595}
