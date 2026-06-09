@@ -8,6 +8,8 @@ This is a clean, simple Python-based trading bot built for the Binance Futures (
 All core project files are located in the root directory:
 *   `client.py`: Implements the REST Client for Binance Futures, including connection tests, signature generation (HMAC-SHA256), order execution logic, and mock/simulation mode.
 *   `cli.py`: The command-line entry point which accepts CLI arguments to run tests or execute orders.
+*   `server.py`: FastAPI server script to launch the visual dashboard.
+*   `index.html`: Modern, glassmorphic dark-mode web dashboard UI.
 *   `trading_bot.log`: Log file that automatically records all timestamped requests, responses, and errors.
 *   `requirements.txt`: Project dependencies (`requests` and `python-dotenv`).
 *   `README.md`: This documentation.
@@ -33,17 +35,23 @@ All core project files are located in the root directory:
 
 ## Usage Examples
 
-*   **Test API Connection**:
+*   **Launch the Web Dashboard (UI)**:
+    ```bash
+    python server.py
+    ```
+    Open `http://localhost:8000` in your web browser.
+
+*   **Test API Connection (CLI)**:
     ```bash
     python cli.py --test-connection
     ```
 
-*   **Place a Market Order**:
+*   **Place a Market Order (CLI)**:
     ```bash
     python cli.py --symbol BTCUSDT --side BUY --type MARKET --quantity 0.002
     ```
 
-*   **Place a Limit Order**:
+*   **Place a Limit Order (CLI)**:
     ```bash
     python cli.py --symbol BTCUSDT --side SELL --type LIMIT --quantity 0.005 --price 98000
     ```

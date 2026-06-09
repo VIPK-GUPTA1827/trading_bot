@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binance Futures Testnet Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0d0e15;
+            --card-bg: rgba(20, 22, 37, 0.6);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-primary: #ffffff;
+            --text-secondary: #8e92a8;
+            --accent-cyan: #00f2fe;
+            --accent-purple: #4facfe;
+            --success-green: #00e676;
+            --error-red: #ff1744;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            background-image: radial-gradient(circle at 10% 20%, rgba(79, 172, 254, 0.1) 0%, transparent 40%),
+                              radial-gradient(circle at 90% 80%, rgba(0, 242, 254, 0.1) 0%, transparent 40%);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            width: 100%;
+            max-width: 1100px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        p.subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1100px;
+            display: grid;
+            grid-template-columns: 1.2fr 1.8fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        input, select {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 0.8rem 1rem;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .radio-btn {
+            flex: 1;
+            position: relative;
+        }
+
+        .radio-btn input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+        .radio-label {
+            display: block;
+            text-align: center;
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .radio-btn input:checked + .radio-label.buy {
+            background: rgba(0, 230, 118, 0.15);
+            border-color: var(--success-green);
+            color: var(--success-green);
+        }
+
+        .radio-btn input:checked + .radio-label.sell {
+            background: rgba(255, 23, 68, 0.15);
+            border-color: var(--error-red);
+            color: var(--error-red);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+            color: #000;
+            border: none;
+            border-radius: 10px;
+            padding: 1rem;
+            font-size: 1.1rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 1rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 242, 254, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 0.8rem 1rem;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: .4s;
+            border-radius: 34px;
+            border: 1px solid var(--border-color);
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--accent-cyan);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
+            background-color: #000;
+        }
+
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .log-container {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 1rem;
+            height: 300px;
+            overflow-y: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .log-line {
+            line-height: 1.4;
+            color: #d1d5db;
+            word-break: break-all;
+        }
+
+        .log-time {
+            color: #6b7280;
+        }
+
+        .log-success {
+            color: var(--success-green);
+        }
+
+        .log-error {
+            color: var(--error-red);
+        }
+
+        .response-container {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            min-height: 120px;
+            white-space: pre-wrap;
+            word-break: break-all;
+            color: var(--accent-cyan);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Binance Futures Testnet Dashboard</h1>
+        <p class="subtitle">Place orders, monitor logs, and analyze requests in real-time</p>
+    </header>
+
+    <div class="container">
+        <!-- Order Placement Card -->
+        <div class="card">
+            <h2>Place New Order</h2>
+            
+            <div class="form-group">
+                <label>Symbol</label>
+                <input type="text" id="symbol" value="BTCUSDT" placeholder="e.g. BTCUSDT">
+            </div>
+
+            <div class="form-group">
+                <label>Order Side</label>
+                <div class="radio-group">
+                    <div class="radio-btn">
+                        <input type="radio" id="side-buy" name="side" value="BUY" checked>
+                        <label for="side-buy" class="radio-label buy">BUY</label>
+                    </div>
+                    <div class="radio-btn">
+                        <input type="radio" id="side-sell" name="side" value="SELL">
+                        <label for="side-sell" class="radio-label sell">SELL</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Order Type</label>
+                <select id="type" onchange="togglePriceField()">
+                    <option value="MARKET">MARKET</option>
+                    <option value="LIMIT">LIMIT</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Quantity</label>
+                <input type="number" id="quantity" step="0.001" value="0.001" placeholder="e.g. 0.001">
+            </div>
+
+            <div class="form-group" id="price-group" style="display: none;">
+                <label>Price</label>
+                <input type="number" id="price" step="0.1" placeholder="e.g. 65000">
+            </div>
+
+            <div class="toggle-container">
+                <span style="font-weight: 600;">Simulation (Mock) Mode</span>
+                <label class="switch">
+                    <input type="checkbox" id="mock" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <button class="btn" onclick="submitOrder()">Submit Order</button>
+        </div>
+
+        <!-- Real-time logs and responses -->
+        <div class="right-panel">
+            <div class="card" style="flex: 1;">
+                <h2>Live Logs</h2>
+                <div class="log-container" id="log-view">
+                    <div class="log-line"><span class="log-time">[System]</span> Dashboard initialized...</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>API Response Result</h2>
+                <div class="response-container" id="response-view">Submit an order to view response...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function togglePriceField() {
+            const type = document.getElementById('type').value;
+            const priceGroup = document.getElementById('price-group');
+            if (type === 'LIMIT') {
+                priceGroup.style.display = 'flex';
+            } else {
+                priceGroup.style.display = 'none';
+            }
+        }
+
+        async function submitOrder() {
+            const symbol = document.getElementById('symbol').value;
+            const side = document.querySelector('input[name="side"]:checked').value;
+            const type = document.getElementById('type').value;
+            const quantity = parseFloat(document.getElementById('quantity').value);
+            const priceVal = document.getElementById('price').value;
+            const price = priceVal ? parseFloat(priceVal) : null;
+            const mock = document.getElementById('mock').checked;
+
+            const responseView = document.getElementById('response-view');
+            responseView.textContent = "Processing order...";
+            responseView.style.color = "var(--accent-cyan)";
+
+            try {
+                const response = await fetch('/api/order', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        symbol, side, type, quantity, price, mock
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    responseView.textContent = JSON.stringify(data.data, null, 2);
+                    responseView.style.color = "var(--success-green)";
+                } else {
+                    responseView.textContent = `Error:\n${data.detail || data.msg || 'Unknown error'}`;
+                    responseView.style.color = "var(--error-red)";
+                }
+            } catch (err) {
+                responseView.textContent = `Request Failed: ${err}`;
+                responseView.style.color = "var(--error-red)";
+            }
+            
+            // Immediately fetch logs after submission
+            fetchLogs();
+        }
+
+        async function fetchLogs() {
+            try {
+                const response = await fetch('/api/logs');
+                if (response.ok) {
+                    const data = await response.json();
+                    const logView = document.getElementById('log-view');
+                    logView.innerHTML = '';
+                    
+                    data.logs.forEach(line => {
+                        const div = document.createElement('div');
+                        div.className = 'log-line';
+                        
+                        // Parse timestamp
+                        const match = line.match(/^\[(.*?)\] (.*)$/);
+                        if (match) {
+                            const timeSpan = document.createElement('span');
+                            timeSpan.className = 'log-time';
+                            timeSpan.textContent = `[${match[1]}] `;
+                            div.appendChild(timeSpan);
+                            
+                            const contentSpan = document.createElement('span');
+                            contentSpan.textContent = match[2];
+                            
+                            if (line.includes('ERROR') || line.includes('Failed')) {
+                                contentSpan.className = 'log-error';
+                            } else if (line.includes('SUCCESSFUL') || line.includes('Success')) {
+                                contentSpan.className = 'log-success';
+                            }
+                            
+                            div.appendChild(contentSpan);
+                        } else {
+                            div.textContent = line;
+                        }
+                        
+                        logView.appendChild(div);
+                    });
+                    
+                    // Auto scroll to bottom
+                    logView.scrollTop = logView.scrollHeight;
+                }
+            } catch (err) {
+                console.error("Failed to fetch logs:", err);
+            }
+        }
+
+        // Poll logs every 2 seconds
+        setInterval(fetchLogs, 2000);
+        
+        // Initial log fetch
+        fetchLogs();
+    </script>
+</body>
+</html>
