@@ -8,10 +8,11 @@ This is a clean, simple Python-based trading bot built for the Binance Futures (
 All core project files are located in the root directory:
 *   `client.py`: Implements the REST Client for Binance Futures, including connection tests, signature generation (HMAC-SHA256), order execution logic, and mock/simulation mode.
 *   `cli.py`: The command-line entry point which accepts CLI arguments to run tests or execute orders.
+*   `backtester.py`: An interactive, offline strategy backtester to simulate SMA Crossover or RSI strategies on historical market data (no API keys required).
 *   `server.py`: FastAPI server script to launch the visual dashboard.
 *   `index.html`: Modern, glassmorphic dark-mode web dashboard UI.
 *   `trading_bot.log`: Log file that automatically records all timestamped requests, responses, and errors.
-*   `requirements.txt`: Project dependencies (`requests` and `python-dotenv`).
+*   `requirements.txt`: Project dependencies.
 *   `README.md`: This documentation.
 
 ---
@@ -60,6 +61,13 @@ All core project files are located in the root directory:
     ```bash
     python cli.py --symbol BTCUSDT --side BUY --type MARKET --quantity 0.002 --mock
     ```
+
+### Mode C: Offline Backtesting
+Run the backtester to simulate performance statistics (returns, drawdowns, win rate) of trading strategies on historical data without requiring API keys:
+```bash
+python backtester.py
+```
+Follow the prompts to select target trading pair, candlestick interval (15m, 1h, 4h, 1d), strategy types (SMA Crossover / RSI), custom indicators period, and start capital.
 
 ---
 
