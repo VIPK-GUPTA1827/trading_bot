@@ -1,0 +1,34 @@
+# Python cache files - never commit these
+__pycache__/
+*.py[cod]
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment - never commit
+venv/
+env/
+ENV/
+.env
+.venv
+
+# Zip/archive files
+*.zip
+*.tar.gz
+*.rar
+
+# Log files
+*.log
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
