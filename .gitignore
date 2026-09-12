@@ -1,15 +1,14 @@
-# Python cache files - never commit these
+# Python cache - never commit these
 __pycache__/
 *.py[cod]
 *.pyc
 *.pyo
 *.pyd
 
-# Virtual environment - never commit
+# Virtual environment
 venv/
 env/
 ENV/
-.env
 .venv
 
 # Zip/archive files
@@ -23,7 +22,6 @@ ENV/
 # Environment variables
 .env
 .env.local
-.env.*.local
 
 # IDE files
 .vscode/
